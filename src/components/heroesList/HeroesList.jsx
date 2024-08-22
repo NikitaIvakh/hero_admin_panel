@@ -1,6 +1,7 @@
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
+import { createSelector } from 'reselect'
 import {
 	deleteHero,
 	deleteHeroError,
@@ -14,9 +15,27 @@ import Spinner from '../spinner/Spinner'
 import './heroesList.scss'
 
 const HeroesList = () => {
-	const { filteredHeroes, heroesLoadingStatus } = useSelector(state => state)
+	const { heroesLoadingStatus } = useSelector(state => state)
 	const { request } = useHttp()
 	const dispatch = useDispatch()
+
+	const filteredHeroesSelector = createSelector(
+		state => state.filters.activeFilter,
+		state => state.heroes.heroes,
+		(filter, heroes) => {
+			if (filter === 'all') return heroes
+			return heroes.filter(item => item.element === filter)
+		}
+	)
+
+	// const filteredHeroes = useSelector(state => {
+	// 	if (state.filters.activeFilter === 'all') return state.heroes.heroes
+	// 	return state.heroes.heroes.filter(
+	// 		item => item.element === state.filters.activeFilter
+	// 	)
+	// })
+
+	const filteredHeroes = useSelector(filteredHeroesSelector)
 
 	useEffect(() => {
 		dispatch(heroesFetching())

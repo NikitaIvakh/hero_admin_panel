@@ -11,11 +11,12 @@ import { useHttp } from '../../hooks/http.hook'
 import Spinner from '../spinner/Spinner'
 
 const HeroesFilters = () => {
-	const { filters, filtersLoadingStatus, activeFilter } = useSelector(
-		state => state
-	)
 	const { request } = useHttp()
 	const dispatch = useDispatch()
+
+	const { filters, filtersLoadingStatus, activeFilter } = useSelector(
+		state => state.filters
+	)
 
 	useEffect(() => {
 		dispatch(filtersFetching())
