@@ -1,12 +1,7 @@
 import classNames from 'classnames'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-	activeFilterChanged,
-	filtersError,
-	filtersFetched,
-	filtersFetching,
-} from '../../actions'
+import { activeFilterChanged, fetchingFilters } from '../../actions'
 import { useHttp } from '../../hooks/http.hook'
 import Spinner from '../spinner/Spinner'
 
@@ -19,10 +14,7 @@ const HeroesFilters = () => {
 	)
 
 	useEffect(() => {
-		dispatch(filtersFetching())
-		request('http://localhost:3001/filters')
-			.then(data => dispatch(filtersFetched(data)))
-			.catch(() => filtersError())
+		dispatch(fetchingFilters(request))
 	}, [])
 
 	if (filtersLoadingStatus === 'loading') {

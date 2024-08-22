@@ -4,6 +4,7 @@ import {
 	compose,
 	legacy_createStore as createStore,
 } from 'redux'
+import { thunk as ReduxThunk } from 'redux-thunk'
 import filters from '../reducers/filters'
 import heroes from '../reducers/heroes'
 
@@ -43,7 +44,7 @@ const store = createStore(
 		filters,
 	}),
 	compose(
-		applyMiddleware(stringMiddleware),
+		applyMiddleware(ReduxThunk, stringMiddleware),
 		enhancer,
 		window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 	)

@@ -2,13 +2,7 @@ import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { createSelector } from 'reselect'
-import {
-	deleteHero,
-	deleteHeroError,
-	heroesFetched,
-	heroesFetching,
-	heroesFetchingError,
-} from '../../actions'
+import { deleteHero, deleteHeroError, fetchHeroes } from '../../actions'
 import { useHttp } from '../../hooks/http.hook'
 import HeroesListItem from '../heroesListItem/HeroesListItem'
 import Spinner from '../spinner/Spinner'
@@ -31,10 +25,7 @@ const HeroesList = () => {
 	const filteredHeroes = useSelector(filteredHeroesSelector)
 
 	useEffect(() => {
-		dispatch(heroesFetching())
-		request('http://localhost:3001/heroes')
-			.then(data => dispatch(heroesFetched(data)))
-			.catch(() => dispatch(heroesFetchingError()))
+		dispatch(fetchHeroes(request))
 	}, [])
 
 	const onDeleteHero = useCallback(

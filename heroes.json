@@ -17,6 +17,18 @@
       "name": "Морской герой",
       "description": "Как аквамен, но не из DC",
       "element": "water"
+    },
+    {
+      "id": "56b988e2-ceed-4df9-bf46-f0de0cc9aad8",
+      "name": "Nikolas S.",
+      "description": "fdsfds",
+      "element": "wind"
+    },
+    {
+      "id": "8ea46a95-17d9-4a85-a4d6-2caf437558b4",
+      "name": "Adam fsdf",
+      "description": "dsadsads",
+      "element": "fire"
     }
   ],
   "filters": [
