@@ -1,16 +1,60 @@
-// Задача для этого компонента:
-// Реализовать создание нового героя с введенными данными. Он должен попадать
-// в общее состояние и отображаться в списке + фильтроваться
-// Уникальный идентификатор персонажа можно сгенерировать через uiid
-// Усложненная задача:
-// Персонаж создается и в файле json при помощи метода POST
-// Дополнительно:
-// Элементы <option></option> желательно сформировать на базе
-// данных из фильтров
+import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { v4 as uuidv4 } from 'uuid'
+import { createNewHero, createNewHeroError } from '../../actions/index'
+import { useHttp } from '../../hooks/http.hook'
 
 const HeroesAddForm = () => {
+	const [state, setState] = useState({ name: '', description: '', element: '' })
+	const { filters, filtersLoadingStatus } = useSelector(state => state)
+	const { request } = useHttp()
+	const dispatch = useDispatch()
+
+	const onChangeValues = event => {
+		setState(perviousState => ({
+			...perviousState,
+			[event.target.name]: event.target.value,
+		}))
+	}
+
+	const onSubmit = event => {
+		event.preventDefault()
+
+		const newHero = {
+			id: uuidv4(),
+			name: state.name,
+			description: state.description,
+			element: state.element,
+		}
+
+		request('http://localhost:3001/heroes', 'POST', JSON.stringify(newHero))
+			.then(dispatch(createNewHero(newHero)))
+			.catch(() => dispatch(createNewHeroError()))
+
+		setState({
+			name: '',
+			description: '',
+			element: '',
+		})
+	}
+
+	const filtersRendering = (filters, status) => {
+		if (status === 'loading') <option>Фильтры загружаются...</option>
+		else if (status === 'error') <option>Ошибка загрузки</option>
+
+		return filters
+			.filter(({ name }) => name !== 'all')
+			.map(({ name, label }) => {
+				return (
+					<option key={name} value={name}>
+						{label}
+					</option>
+				)
+			})
+	}
+
 	return (
-		<form className='border p-4 shadow-lg rounded'>
+		<form className='border p-4 shadow-lg rounded' onSubmit={onSubmit}>
 			<div className='mb-3'>
 				<label htmlFor='name' className='form-label fs-4'>
 					Имя нового героя
@@ -22,6 +66,8 @@ const HeroesAddForm = () => {
 					className='form-control'
 					id='name'
 					placeholder='Как меня зовут?'
+					value={state.name}
+					onChange={onChangeValues}
 				/>
 			</div>
 
@@ -31,11 +77,13 @@ const HeroesAddForm = () => {
 				</label>
 				<textarea
 					required
-					name='text'
+					name='description'
 					className='form-control'
 					id='text'
 					placeholder='Что я умею?'
 					style={{ height: '130px' }}
+					value={state.description}
+					onChange={onChangeValues}
 				/>
 			</div>
 
@@ -43,12 +91,16 @@ const HeroesAddForm = () => {
 				<label htmlFor='element' className='form-label'>
 					Выбрать элемент героя
 				</label>
-				<select required className='form-select' id='element' name='element'>
+				<select
+					required
+					className='form-select'
+					id='element'
+					name='element'
+					value={state.element}
+					onChange={onChangeValues}
+				>
 					<option>Я владею элементом...</option>
-					<option value='fire'>Огонь</option>
-					<option value='water'>Вода</option>
-					<option value='wind'>Ветер</option>
-					<option value='earth'>Земля</option>
+					{filtersRendering(filters, filtersLoadingStatus)}
 				</select>
 			</div>
 
