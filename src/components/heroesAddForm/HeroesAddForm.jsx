@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { v4 as uuidv4 } from 'uuid'
-import { createNewHero, createNewHeroError } from '../../actions/index'
 import { useHttp } from '../../hooks/http.hook'
+import { createNewHero, createNewHeroError } from '../heroesList/HeroesSlice'
 
 const HeroesAddForm = () => {
 	const [state, setState] = useState({ name: '', description: '', element: '' })

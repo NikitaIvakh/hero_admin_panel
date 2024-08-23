@@ -2,11 +2,12 @@ import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { createSelector } from 'reselect'
-import { deleteHero, deleteHeroError, fetchHeroes } from '../../actions'
+import { fetchHeroes } from '../../actions/index'
 import { useHttp } from '../../hooks/http.hook'
 import HeroesListItem from '../heroesListItem/HeroesListItem'
 import Spinner from '../spinner/Spinner'
 import './heroesList.scss'
+import { deleteHero, deleteHeroError } from './HeroesSlice'
 
 const HeroesList = () => {
 	const { heroesLoadingStatus } = useSelector(state => state.heroes)
