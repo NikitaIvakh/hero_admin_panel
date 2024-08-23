@@ -2,13 +2,16 @@ import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { v4 as uuidv4 } from 'uuid'
 import { useHttp } from '../../hooks/http.hook'
+import store from '../../store'
+import { selectAll } from '../heroesFilters/HeroesFilterSlice'
 import { createNewHero, createNewHeroError } from '../heroesList/HeroesSlice'
 
 const HeroesAddForm = () => {
 	const [state, setState] = useState({ name: '', description: '', element: '' })
-	const { filters, filtersLoadingStatus } = useSelector(state => state.filters)
 	const { request } = useHttp()
 	const dispatch = useDispatch()
+	const filters = selectAll(store.getState())
+	const { filtersLoadingStatus } = useSelector(state => state.filters)
 
 	const onChangeValues = event => {
 		setState(perviousState => ({
